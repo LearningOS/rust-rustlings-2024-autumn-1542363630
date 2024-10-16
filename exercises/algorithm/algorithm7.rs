@@ -3,7 +3,6 @@
 	This question requires you to use a stack to achieve a bracket match
 */
 
-// I AM NOT DONE
 #[derive(Debug)]
 struct Stack<T> {
 	size: usize,
@@ -31,8 +30,12 @@ impl<T> Stack<T> {
 		self.size += 1;
 	}
 	fn pop(&mut self) -> Option<T> {
-		// TODO
-		None
+		if 0 == self.size {
+			return  None;
+		}
+		self.size=self.size-1;
+		let x = self.data.remove(self.size);
+		Some(x)
 	}
 	fn peek(&self) -> Option<&T> {
 		if 0 == self.size {
@@ -101,8 +104,61 @@ impl<'a, T> Iterator for IterMut<'a, T> {
 
 fn bracket_match(bracket: &str) -> bool
 {
-	//TODO
-	true
+	let mut sta = Stack::<char>::new();
+	for s in bracket.chars(){
+		if s == '(' || s == '{' || s == '[' {
+			sta.push(s);
+		}
+		else if s == ')' {
+			if let Some(&now) = sta.peek(){
+				if  now == '(' {
+					sta.pop();
+				}
+				else {
+					return false;
+				}
+			}
+			else {
+				return false;
+			}
+		}
+		else if s == '}' {
+			if let Some(&now) = sta.peek(){
+				if  now == '{' {
+					sta.pop();
+				}
+				else {
+					return false;
+				}
+			}
+			else {
+				return false;
+			}
+
+		}
+		else if s == ']' {
+			if let Some(&now) = sta.peek(){
+				if  now == '[' {
+					sta.pop();
+				}
+				else {
+					return false;
+				}
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+			continue;
+		}
+	}
+	if sta.size == 0{
+		true
+	}
+	else {
+		false
+	}
 }
 
 #[cfg(test)]

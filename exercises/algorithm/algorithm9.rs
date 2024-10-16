@@ -2,7 +2,6 @@
 	heap
 	This question requires you to implement a binary heap function
 */
-// I AM NOT DONE
 
 use std::cmp::Ord;
 use std::default::Default;
@@ -38,6 +37,19 @@ where
 
     pub fn add(&mut self, value: T) {
         //TODO
+        self.items.push(value);
+        self.count += 1;
+        let mut now = self.count;
+        while now > 1 {
+            let p_id = self.parent_idx(now);
+            if (self.comparator)(&self.items[now], &self.items[p_id]){
+                self.items.swap(now, p_id);
+                now = p_id;
+            }
+            else {
+                break;
+            }
+        }
     }
 
     fn parent_idx(&self, idx: usize) -> usize {
@@ -58,7 +70,25 @@ where
 
     fn smallest_child_idx(&self, idx: usize) -> usize {
         //TODO
-		0
+        let lts = self.left_child_idx(idx);
+        let rts = self.right_child_idx(idx);
+		if lts <= self.count && rts <= self.count{
+            if (self.comparator)(&self.items[lts], &self.items[rts]){
+                return lts;
+            }
+            else {
+                return rts;
+            }
+        }
+        else if lts <= self.count {
+            return lts;
+        }
+        else if rts <= self.count {
+            return rts;
+        }
+        else {
+            return idx;
+        }
     }
 }
 
@@ -85,7 +115,20 @@ where
 
     fn next(&mut self) -> Option<T> {
         //TODO
-		None
+        if self.count == 0 {
+            return None;
+        }
+        else {
+            let mut now = 1;
+            let mut smid = self.smallest_child_idx(now);
+            while smid != now {
+                self.items.swap(smid, now);
+                now = smid;
+                smid = self.smallest_child_idx(now);
+            }
+            self.count -= 1;
+            return Some(self.items.remove(now));
+        }
     }
 }
 

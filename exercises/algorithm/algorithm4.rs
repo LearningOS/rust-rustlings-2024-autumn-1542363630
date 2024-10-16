@@ -3,7 +3,6 @@
 	This problem requires you to implement a basic interface for a binary tree
 */
 
-//I AM NOT DONE
 use std::cmp::Ordering;
 use std::fmt::Debug;
 
@@ -49,14 +48,73 @@ where
     }
 
     // Insert a value into the BST
-    fn insert(&mut self, value: T) {
-        //TODO
+    fn insert(&mut self, value: T) 
+    where T: Copy,
+    {
+        // let now_node = self.root.as_mut();
+        if let Some(mut now) = self.root.as_mut(){//有根
+            while true{
+                if value < now.value{
+                    // let new_node = TreeNode::new(v)
+                    // let mut next_node = now.left;
+                    if now.left.is_some(){
+                        now = now.left.as_mut().unwrap();
+                    }
+                    else {
+                        now.left = Some(Box::new(TreeNode::new(value)));
+                        break;
+                    }
+                }
+                else if value > now.value{
+                    if now.right.is_some(){
+                        now = now.right.as_mut().unwrap();
+                    }
+                    else {
+                        now.right = Some(Box::new(TreeNode::new(value)));
+                        break;
+                    }
+                }
+                else {
+                    break;
+                }
+            }
+        }
+        else {//无根
+            self.root = Some(Box::new(TreeNode::new(value)));
+        }
     }
 
     // Search for a value in the BST
     fn search(&self, value: T) -> bool {
-        //TODO
-        true
+        if let Some(mut now) = self.root.as_ref(){//有根
+            while true{
+                if value < now.value{
+                    // let new_node = TreeNode::new(v)
+                    // let mut next_node = now.left;
+                    if now.left.is_some(){
+                        now = now.left.as_ref().unwrap();
+                    }
+                    else {
+                        return false;
+                    }
+                }
+                else if value > now.value{
+                    if now.right.is_some(){
+                        now = now.right.as_ref().unwrap();
+                    }
+                    else {
+                        return false;
+                    }
+                }
+                else {
+                    return true;
+                }
+            }
+        }
+        else {//无根
+            return false;
+        }
+        false
     }
 }
 
